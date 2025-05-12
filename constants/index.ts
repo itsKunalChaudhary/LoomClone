@@ -236,6 +236,7 @@ export const DEFAULT_RECORDING_CONFIG = {
   videoBitsPerSecond: 2500000,
 };
 
+type Visibility = string;
 export const dummyCards = [
   {
     id: "1",

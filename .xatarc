@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://kkc_snapcast-5hklkh.ap-southeast-2.xata.sh/db/kkc_snapcast",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}
