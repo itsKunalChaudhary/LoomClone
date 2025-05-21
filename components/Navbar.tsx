@@ -3,13 +3,16 @@
 import React from 'react'
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from 'next/navigation';
+import {redirect, useRouter} from 'next/navigation';
 import {handleRoute} from "next/dist/experimental/testmode/playwright/page-route";
-
-const user = {}
+import {authClient} from "@/lib/auth-client";
 
 const Navbar = () => {
     const router = useRouter()
+    const { data: session } = authClient.useSession();
+
+    const user = session?.user;
+
     return (
         <header className="navbar">
             <nav>
@@ -19,10 +22,18 @@ const Navbar = () => {
                 </Link>
                 {user &&
                     <figure>
-                        <button onClick={() => router.push('/profile/123456')}>
-                            <Image src={"/assets/images/dummy.jpg"} alt={"Dummy User"} width={36} height={36} className={"rounded-full aspect-square"} />
+                        <button onClick={() => router.push(`/profile/${user?.id}`)}>
+                            <Image src={user.image || ""} alt={"Dummy User"} width={36} height={36} className={"rounded-full aspect-square"} />
                         </button>
-                        <button className={"cursor-pointer"}>
+                        <button onClick={async () => {
+                            return await authClient.signOut({
+                                fetchOptions: {
+                                    onSuccess: () => {
+                                        redirect("/sign-in");
+                                    },
+                                },
+                            });
+                        }} className={"cursor-pointer"}>
                             <Image src={"/assets/icons/logout.svg"} alt={"Logout Icon"} width={24} height={24} className={"rotate-180"} />
                         </button>
                     </figure>
